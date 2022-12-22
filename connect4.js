@@ -6,16 +6,17 @@
  */
 
 class Game{
-  constructor(height, width) {
+  constructor(p1, p2, height, width) {
+    this.players = [p1, p2]
     this.height = height;
     this.width = width;
-    this.currPlayer = 1;
+    this.currPlayer = p1;
     this.board = [];
     this.makeBoard();
     this.makeHtmlBoard();
   }
 
-  makeBoard() {
+   makeBoard() {
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
@@ -23,6 +24,7 @@ class Game{
 
   makeHtmlBoard() {
     const board = document.getElementById('board');
+    board.innerHTML="";
   
     // make column tops (clickable area for adding a piece to that column)
     const top = document.createElement('tr');
@@ -63,11 +65,20 @@ class Game{
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.currPlayer.color;
     piece.style.top = -50 * (y + 2);
+
+
+    // if(this.p1 && this.currPlayer === 1) {
+    //   piece.style.backgroundColor = this.p1;
+    // }
+    // if(this.p2 && this.currPlayer === 2) {
+    //   piece.style.backgroundColor = this.p2;
+    // }
+    
   
     const spot = document.getElementById(`${y}-${x}`);
-    console.log(spot);
+    //console.log(spot);
     spot.append(piece);
   }
   
@@ -91,7 +102,7 @@ class Game{
     
     // check for win
     if (this.checkForWin()) {
-      return this.endGame(`Player ${this.currPlayer} won!`);
+      return this.endGame(`Player with the color ${this.currPlayer.color} won!`);
     }
     
     // check for tie
@@ -100,7 +111,7 @@ class Game{
     }
       
     // switch players
-    this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    this.currPlayer = this.currPlayer === this.players[0] ? this.players[1] : this.players[0];
   }
 
   checkForWin() {
@@ -137,6 +148,12 @@ class Game{
   
 } // end of class
 
+class Player {
+  constructor(color) {
+    this.color = color;
+  }
+}
+
 // add a button and two text fields in the html to start the game
 // add an event listener for a button click to recreate the page (restart the game)
 // the page should also set the player colors to the entered values (and have a default if empty)
@@ -144,7 +161,9 @@ class Game{
 
 const button = document.getElementById("start-game")
 button.addEventListener('click', function () {
-  new Game(6, 7); 
+  p1 = new Player(document.getElementById("p1-text").value)
+  p2 = new Player(document.getElementById("p2-text").value)
+  new Game(p1, p2, 6, 7); 
 });
 
 
