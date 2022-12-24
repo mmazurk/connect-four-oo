@@ -14,6 +14,7 @@ class Game{
     this.board = [];
     this.makeBoard();
     this.makeHtmlBoard();
+    this.gameIsOver = false;
   }
 
    makeBoard() {
@@ -84,9 +85,13 @@ class Game{
   
   endGame(msg) {
     alert(msg);
+    this.gameIsOver = true;
   }
   
   handleClick(evt) {
+    // if the game is over, don't do anything
+    if(this.gameIsOver) return;
+
     // get x from ID of clicked cell
     const x = +evt.target.id;
   
